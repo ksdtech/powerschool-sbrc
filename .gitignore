@@ -2,6 +2,8 @@
 *.rbc
 .bundle
 .config
+*.pst
+standards.txt
 coverage
 InstalledFiles
 lib/bundler/man

@@ -1,0 +1,62 @@
+pst_report 'test1.pst', 'CCSS Grade 1' do 
+  pst_page 1 do
+    pst_grid 1 do
+      pst_title 'ENGLISH LANGUAGE ARTS - READING'
+      pst_groups '1.RF', '1.RL', '1.RI'
+    end
+  
+    pst_attendance 2
+    pst_supplemental 2
+  
+    pst_grid 2 do
+      pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
+      pst_groups '1.L', '1.W', '1.SL' 
+    end
+  end
+  
+  pst_page 2 do
+    pst_grid 1 do 
+      pst_title 'MATHEMATICS'
+      pst_groups '1.OA', '1.NBT', '1.MD', '1.G', '1.MP'
+    end
+
+    pst_grid 1 do 
+      pst_title 'SCIENCE'
+      pst_groups '1.SCC'
+    end
+    
+    pst_grid 1 do 
+      pst_title 'SOCIAL STUDIES'
+      pst_groups '1.SSC'
+    end
+    
+    pst_grid 2, '1.CMTS' do
+      pst_title 'LEARNER / COMMUNICATOR'
+      pst_groups '1.SDL', '1.COL'
+    end
+  end
+  
+  pst_page 3 do
+    pst_grid 1, '1.AR.5' do
+      pst_title 'ART'
+      pst_groups '1.AR'
+    end
+    
+    pst_grid 1, '1.MU.5' do
+      pst_title 'MUSIC'
+      pst_groups '1.MU'
+    end
+    
+    pst_grid 2, '1.LB.6' do
+      pst_title 'LIBRARY'
+      pst_groups '1.LB'
+    end
+    
+    pst_grid 2, '1.PE.6' do
+      pst_title 'PHYSICAL EDUCATION'
+      pst_groups '1.PE'
+    end
+  end
+  
+  pst_output
+end
