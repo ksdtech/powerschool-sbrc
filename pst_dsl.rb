@@ -178,24 +178,31 @@ class Text
 end
 
 class Report
+  attr_accessor :box
+  
   def initialize(filename='test.pst', title='CCSS Grade 1')
     @filename = filename
     @title = title
     @objects = [ ]
-    @page_tops = [ 2.4, 1.4, 1.0 ]
+    @page_tops = [ 2.2, 0.6 ]
     @page = 1
     @column = 1
     @box = nil
+    @box_first = true
+    @box_standards = nil
     @comment_std = nil
+    @grade_scale = false
     @comment_height = 1.8
-    @caption_char_widths = [ 42, 35 ]
-    @line_heights = [ 0.2, 0.3, 0.4 ]
+    @caption_char_widths = [ [ 48, 92 ], [ 40, 80 ] ]
+    @p_height   = 0.2
+    @br_height  = 0.17
     @text_bias  = [ 0.05, 0.12 ]
     @col_tops   = [ @page_tops[0], @page_tops[0] ]
     @col_lefts  = [ 0.5,   4.375 ]
     @column_width  = 3.625
-    @grade_width = 0.3
-    @caption_width = @column_width - (3 * @grade_width) - 0.05
+    @grade_width = 0.25
+    @caption_width = @column_width - (3 * @grade_width)
+    @caption_maxw  = @caption_width - @text_bias[0]
     @standards = { }
     @standards_by_course = { }
     @standards_by_parent = { }
@@ -263,36 +270,52 @@ class Report
     yield self
   end
 
-  def pst_grid(col_no, comments=nil)
-    open_box(col_no, comments)
+  def pst_grid(col_no)
+    open_box(col_no)
     yield self
+    close_box
   end
 
   def pst_title(*cols)
-    title = cols[0]
-    @objects << Text.new(@page, @box[0], @box[3] + @text_bias[1], @column_width, @line_heights[0], title, "Grid.Title", { bold: true })
-    t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
-    if cols.size < 2
-      # use trimester labels
-      t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
-      t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
-      @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>T1<tabc #{t2c}>T2<tabc #{t3c}>T3", "Grid.T123", { bold: true })
+    n = cols.size
+    if @grade_scale
+      cols.each_with_index do |title, i|
+        if i > 0
+          @box[1] += @br_height
+          @box[3] += @br_height
+        end
+        @objects << Text.new(@page, @box[0], @box[3] + @text_bias[1], @column_width, @p_height, title, "GS.Title", { bold: true })
+      end
     else
-      # use value label
-      value = cols[1]
-      @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>#{value}", "Grid.Value", { bold: true })
+      title = cols[0].strip
+      @objects << Text.new(@page, @box[0], @box[3] + @text_bias[1], @column_width, @p_height, title, "Grid.Title", { bold: true })
+      t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
+      if n < 2
+        # use trimester labels
+        @box[5] = true
+        t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
+        t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
+        @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>T1<tabc #{t2c}>T2<tabc #{t3c}>T3", "Grid.T123", { bold: true })
+      else
+        # use value label
+        @box[5] = false
+        value = cols[1].strip
+        if value != ""
+          @objects << Text.new(@page, @box[0] + @caption_width + @text_bias[0], @box[3] + @text_bias[1], 0, 0, value, "Grid.Value", { bold: true })
+        end
+      end
     end
-    @box[1] += @line_heights[0]
-    @box[3] += @line_heights[0]
+    @box[1] += @p_height
+    @box[3] += @p_height
   end
 
   def pst_attendance(col_no)
-    open_box(col_no, nil)
+    open_box(col_no)
     pst_title('ATTENDANCE')
     @objects << Line.new(@page, @box[0], @box[1], @box[2], @box[1])
     s = 'Days absent'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "Absent.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "Absent.Name")
     t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
     t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
     t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
@@ -301,7 +324,7 @@ class Report
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     s = 'Days tardy'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "Tardy.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "Tardy.Name")
     @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(daily.att.count;;T,U,L;T1)<tabc #{t2c}>^(daily.att.count;;T,U,L;T2)<tabc #{t3c}>^(daily.att.count;;T,U,L;T3)", "Tardy.T123", { bold: true })
     @box[3] += h
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
@@ -309,46 +332,43 @@ class Report
   end
 
   def pst_supplemental(col_no)
-    open_box(col_no, nil)
+    open_box(col_no)
     t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
-    pst_title('SUPPLEMENTAL PROGRAMS', 'VALUE')
+    pst_title('SUPPLEMENTAL PROGRAMS', '')
     @objects << Line.new(@page, @box[0], @box[1], @box[2], @box[1])
     s = 'English Language Learning - Overall CELDT'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "CELDT.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "CELDT.Name")
     @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(tests;name=CELDT;score=Overall;type=num;result=max)", "CELDT.Overall", { bold: true })
     @box[3] += h
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     s = 'Resource Specialist'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "RSP.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "RSP.Name")
     @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(CA_PrimDisability;if.not.blank.then=X)", "504.Value", { bold: true })
     @box[3] += h
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     s = '504'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "504.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "504.Name")
     @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(CA_SpEd504;if.1.then=X)", "504.Value", { bold: true })
     @box[3] += h
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     s = 'Modifications'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, s, "Modifications.Name")
+    @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, s, "Modifications.Name")
     @box[3] += h
     @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     close_box
   end
   
-  def pst_groups(*groups)
-    first = true
-    groups.each do |parent|
-      if first
-        first = false
-        @objects << Line.new(@page, @box[0], @box[1], @box[2], @box[1])
-      end
+  def pst_standards(*groups)
+    @box_standards = groups
+    @box_standards.each do |parent|
+      box_top_line
       std = @standards[parent]
       maxh, h = line_height(std[:name], true)
-      @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, std[:name], "#{parent}.Name", { bold: true })
+      @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{parent}.Name", { bold: true })
       @box[3] += h
       @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
       t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
@@ -357,26 +377,55 @@ class Report
       @standards_by_parent[parent].each do |id|
         std = @standards[id]
         maxh, h = line_height(std[:name], false)
-        @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_width, maxh, std[:name], "#{id}.Name")
+        @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{id}.Name")
         @objects << Text.new(@page, @box[0] + @caption_width, @box[3] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(*std.stored.transhigh;#{id};T1)<tabc #{t2c}>^(*std.stored.transhigh;#{id};T2)<tabc #{t3c}>^(*std.stored.transhigh;#{id};T3)", "#{id}.T123", { bold: true })
         @box[3] += h
         @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
       end
     end
+  end
+  
+  def pst_grade_scale(col_no)
+    open_box(col_no)
+    @grade_scale = true
+    yield self
     close_box
   end
   
+  def pst_text(*lines)
+    if @grade_scale
+      lines.each_with_index do |title, i|
+        if i > 0
+          @box[3] += @br_height
+        end
+        @objects << Text.new(@page, @box[0], @box[3] + @text_bias[1], @column_width, @p_height, title, "GS.#{i+1}")
+      end
+    end
+    @box[3] += @p_height
+    @box[1] = @box[3]
+  end
+  
+  def pst_comment(comments, height=1.8)
+    @comment_std = comments
+    @comment_height = height
+  end
+    
   protected
   
   def line_count(s, bold)
-    bold ? (s.length > @caption_char_widths[1] ? 2 : 1) :
-      (s.length > @caption_char_widths[0] ? 2 : 1)
+    widths_table = @caption_char_widths[bold ? 1 : 0]
+    l = s.length
+    i = 1
+    while i < 3 && widths_table[i-1] <= l do
+      i += 1
+    end
+    return i
   end
   
   def line_height(s, bold)
     n    = line_count(s, bold)
-    maxh = @line_heights[n-1]
-    h    = @line_heights[n-1]
+    maxh = @p_height + (n-1) * @br_height
+    h    = maxh
     return [maxh, h]
   end
   
@@ -412,44 +461,68 @@ class Report
       @objects << Text.new(@page,  3.352,  0.944,  0,  0, "First Grade Progress Report", "First Grade Progress Report", { size: 11, bold: true,  })
       @objects << Text.new(@page,  3.065,  1.111,  0,  0, "Bacich Elementary School - Sally Peck, Principal", "Bacich", {  })
       @objects << Text.new(@page,  3.769,  1.278,  0,  0, "School Year 2013-2014", "School Year", {  })
-      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(Fipst_Name) ^(Middle_Name) ^(Fipst_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)", "Student Name", { size: 9, bold: true })
-      @objects << Text.new(@page,  4.500,  1.500,  0,  0, "Academic Achievement Level Descriptors", "Text", { bold: true, })
-      @objects << Text.new(@page,  3.900,  1.625,  0,  0, "3  = <b>Significant</b> understanding of the standard and the ability to apply.\n2  = <b>Partial</b> understanding of the standard and the ability to apply.\n1  = <b>Minimal</b> understanding of the standard and the ability to apply.", "Text", {  })
+      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)", "Student Name", { size: 9, bold: true })
       @col_tops = [ @page_tops[0], @page_tops[0] ]
-    elsif @page == 2
-      @objects << Text.new(@page,  4.917,  0.625,  0,  0, "          Self-Directed Learner and\nCollaborative Communicator Descriptors", "Text", { bold: true, })
-      @objects << Text.new(@page,  5.223,  1.025,  0,  0, "C  = <b>Consistently</b> demonstrates.\nO  = <b>Occasionally</b> demonstrates.\nS  = <b>Seldom</b> demonstrates.", "Text", {  })
-      @col_tops = [ @page_tops[1], @page_tops[1] ]
     else
-      @col_tops = [ @page_tops[2], @page_tops[2] ]
+      @col_tops = [ @page_tops[1], @page_tops[1] ]
     end
+    open_box(1)
   end
   
-  def open_box(col_no, comments)
+  def open_box(col_no)
     @column = col_no
     i = @column - 1
-    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[i] + @column_width, @col_tops[i] ]
-    @comment_std = comments
+    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[i] + @column_width, @col_tops[i], true ]
+    @box_first = true
+    @box_standards = nil
+    @comment_std = nil
+  end
+  
+  def box_top_line
+    if @box_first
+      @box_first = false
+      @objects << Line.new(@page, @box[0], @box[1], @box[2], @box[1])
+    end
   end
   
   def close_box
-    # vertical lines
-    1.upto(3) do |i|
-      left = @box[2] - (4-i) * @grade_width
-      @objects << Line.new(@page, left, @box[1], left, @box[3])
+    if ((@box[3] - @box[1]).abs > 0.01)
+      # vertical lines for T1, T2, T3
+      n = @box[5] ? 3 : 1
+      1.upto(n) do |i|
+        left = @box[2] - (4-i) * @grade_width
+        @objects << Line.new(@page, left, @box[1], left, @box[3])
+      end
     end
+    
+    # comments
     if @comment_std
-      @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @column_width - 2 * @text_bias[0], @comment_height - 2 * @text_bias[1], 
-      "^(*std.stored.comment;#{@comment_std};T1)", "Comments", { bold: true })
+      box_top_line
+      left = @box[0] + @text_bias[0]
+      top = @box[3] + @text_bias[1]
+      maxw = @column_width - 2 * @text_bias[0]
+      maxh = @comment_height - 2 * @text_bias[1]
+      text = @box_standards ? "<b>COMMENTS</b>\n" : ""
+      text += "<b>T1:</b> ^(*std.stored.comment;#{@comment_std};T1)\n<b>T2:</b> ^(*std.stored.comment;#{@comment_std};T2)\n<b>T3:</b> ^(*std.stored.comment;#{@comment_std};T3)"
+      @objects << Text.new(@page, left, top, maxw, maxh, text, "#{@comment_std}.Comments")
       @box[3] += @comment_height
       @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
     end
-    @objects << Line.new(@page, @box[0], @box[1], @box[0], @box[3])
-    @objects << Line.new(@page, @box[2], @box[1], @box[2], @box[3])
+    
+    # left and right of box
+    if (@box[3] - @box[1]).abs > 0.01
+      @objects << Line.new(@page, @box[0], @box[1], @box[0], @box[3])
+      @objects << Line.new(@page, @box[2], @box[1], @box[2], @box[3])
+    end
+    
+    # set up next box top
     i = @column - 1
-    @col_tops[i] = @box[3] + @line_heights[0]
+    @col_tops[i] = @box[3] + @p_height
     @box = nil
+    @box_first = true
+    @box_standards = nil
     @comment_std = nil
+    @grade_scale = false
   end
 end
 
