@@ -1,3 +1,8 @@
 require './pst_dsl'
 
-load('grade1tmpl.txt')
+['gradetktmpl.txt', 'gradektmpl.txt', 
+  'grade1tmpl.txt', 'grade2tmpl.txt',
+  'grade3tmpl.txt', 'grade4tmpl.txt'].each do |tmpl|
+  $stderr.puts "loading #{tmpl}"
+  load(tmpl)
+end

@@ -1,4 +1,4 @@
-pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do 
+pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -9,7 +9,7 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
 
     pst_grid 1 do
       pst_title 'ENGLISH LANGUAGE ARTS - READING'
-      pst_standards '1.RF', '1.RL', '1.RI'
+      pst_standards '4.RF', '4.RL', '4.RI'
     end
   
     pst_attendance 2
@@ -17,21 +17,16 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
   
     pst_grid 2 do
       pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
-      pst_standards '1.L', '1.W', '1.SL' 
+      pst_standards '4.L', '4.W', '4.SL' 
     end
   end
   
   pst_page 2 do
     pst_grid 1 do 
       pst_title 'MATHEMATICS'
-      pst_standards '1.OA', '1.NBT', '1.MD', '1.G', '1.MP'
+      pst_standards '4.OA', '4.NBT', '4.MD', '4.G', '4.NF', '4.MP'
     end
 
-    pst_grid 1 do 
-      pst_title 'SCIENCE'
-      pst_standards '1.SCC'
-    end
-    
     pst_grade_scale 2 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
@@ -40,44 +35,59 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
     end
 
     pst_grid 2 do 
+      pst_title 'SCIENCE'
+      pst_standards '4.SCC'
+    end
+    
+    pst_grid 2 do 
       pst_title 'SOCIAL STUDIES'
-      pst_standards '1.SSC'
+      pst_standards '4.SSC'
     end
     
-    pst_grid 2 do
-      pst_title 'LEARNER / COMMUNICATOR'
-      pst_standards '1.SDL', '1.COL'
-    end
-    
-    pst_grid 2 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment '1.CMTS', 2.8
-    end
   end
   
   pst_page 3 do
+    pst_grade_scale 1 do
+      pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
+      pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
+        "<b>O</b> = <b>Occasionally</b> demonstrates.", 
+        "<b>S</b> = <b>Seldom</b> demonstrates."
+    end
+    
+    pst_grid 1 do
+      pst_title 'LEARNER / COMMUNICATOR'
+      pst_standards '4.SDL', '4.COL'
+    end 
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', ''
+      pst_comment '4.CMTS', 2.8
+    end
+  end
+  
+  pst_page 4 do
     pst_grid 1 do
       pst_title 'ART'
-      pst_standards '1.AR'
-      pst_comment '1.AR.5'
+      pst_standards '4.AR'
+      pst_comment '4.AR.5'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
-      pst_standards '1.LB'
-      pst_comment '1.LB.6'
+      pst_standards '4.LB'
+      pst_comment '4.LB.6'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
-      pst_standards '1.MU'
-      pst_comment '1.MU.5'
+      pst_standards '4.MU'
+      pst_comment '4.MU.5'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
-      pst_standards '1.PE'
-      pst_comment '1.PE.6'
+      pst_standards '4.PE'
+      pst_comment '4.PE.6'
     end
   end
   

@@ -180,8 +180,9 @@ end
 class Report
   attr_accessor :box
   
-  def initialize(filename='test.pst', title='CCSS Grade 1')
+  def initialize(filename, ps_name, title)
     @filename = filename
+    @ps_name = ps_name
     @title = title
     @objects = [ ]
     @page_tops = [ 2.2, 0.6 ]
@@ -193,7 +194,7 @@ class Report
     @comment_std = nil
     @grade_scale = false
     @comment_height = 1.8
-    @caption_char_widths = [ [ 48, 92 ], [ 40, 80 ] ]
+    @caption_char_widths = [ [ 48, 92-48 ], [ 40, 80-40 ] ]
     @p_height   = 0.2
     @br_height  = 0.17
     @text_bias  = [ 0.05, 0.12 ]
@@ -220,7 +221,7 @@ class Report
         }
         xml.ReportHeader {
           xml.Type "Object Report"
-          xml.Name @title
+          xml.Name @ps_name
           xml.Table "Students"
         }
         xml.ReportData {
@@ -367,6 +368,9 @@ class Report
     @box_standards.each do |parent|
       box_top_line
       std = @standards[parent]
+      if !std
+        raise "no such standard '#{parent}'"
+      end
       maxh, h = line_height(std[:name], true)
       @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{parent}.Name", { bold: true })
       @box[3] += h
@@ -374,6 +378,9 @@ class Report
       t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
       t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
       t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
+      if !@standards_by_parent[parent] || @standards_by_parent[parent].empty?
+        raise "no standards for parent '#{parent}'"
+      end
       @standards_by_parent[parent].each do |id|
         std = @standards[id]
         maxh, h = line_height(std[:name], false)
@@ -411,15 +418,14 @@ class Report
   end
     
   protected
-  
+    
   def line_count(s, bold)
     widths_table = @caption_char_widths[bold ? 1 : 0]
+    base = widths_table[0]
+    incr = widths_table[1]
     l = s.length
-    i = 1
-    while i < 3 && widths_table[i-1] <= l do
-      i += 1
-    end
-    return i
+    n = l <= base ? 1 : ((s.length - base + incr) / incr).floor + 1
+    return n
   end
   
   def line_height(s, bold)
@@ -457,10 +463,10 @@ class Report
     @page = page_no
     if @page == 1
       @objects << Picture.new(@page,  0.556,  0.500,  1.612,  2.000, "KSDLogo.jpg", "Picture")
-      @objects << Text.new(@page,  3.750,  0.778,  0,  0, "Kentfield School District", "Kentfield School District", {  })
-      @objects << Text.new(@page,  3.352,  0.944,  0,  0, "First Grade Progress Report", "First Grade Progress Report", { size: 11, bold: true,  })
-      @objects << Text.new(@page,  3.065,  1.111,  0,  0, "Bacich Elementary School - Sally Peck, Principal", "Bacich", {  })
-      @objects << Text.new(@page,  3.769,  1.278,  0,  0, "School Year 2013-2014", "School Year", {  })
+      @objects << Text.new(@page,  1.600,  0.778,  0,  0, "<tabc 4.25>Kentfield School District", "Kentfield School District", {  })
+      @objects << Text.new(@page,  1.600,  0.944,  0,  0, "<tabc 4.25>" + @title, @title, { size: 11, bold: true,  })
+      @objects << Text.new(@page,  1.600,  1.111,  0,  0, "<tabc 4.25>Bacich Elementary School - Sally Peck, Principal", "Bacich", {  })
+      @objects << Text.new(@page,  1.600,  1.278,  0,  0, "<tabc 4.25>School Year 2013-2014", "School Year", {  })
       @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)", "Student Name", { size: 9, bold: true })
       @col_tops = [ @page_tops[0], @page_tops[0] ]
     else
@@ -526,8 +532,8 @@ class Report
   end
 end
 
-def pst_report(filename, title)
-  $the_report = Report.new(filename, title)
+def pst_report(filename, ps_name, title)
+  $the_report = Report.new(filename, ps_name, title)
   yield $the_report
 end
 

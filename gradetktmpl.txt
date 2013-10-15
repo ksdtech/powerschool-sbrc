@@ -1,4 +1,4 @@
-pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do 
+pst_report 'sbrcgradetk.pst', 'CCSS Grade TK', 'Transitional Kindergarten Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -9,7 +9,7 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
 
     pst_grid 1 do
       pst_title 'ENGLISH LANGUAGE ARTS - READING'
-      pst_standards '1.RF', '1.RL', '1.RI'
+      pst_standards 'TK.RF', 'TK.RL'
     end
   
     pst_attendance 2
@@ -17,21 +17,21 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
   
     pst_grid 2 do
       pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
-      pst_standards '1.L', '1.W', '1.SL' 
+      pst_standards 'TK.L', 'TK.W', 'TK.SL' 
     end
   end
   
   pst_page 2 do
     pst_grid 1 do 
       pst_title 'MATHEMATICS'
-      pst_standards '1.OA', '1.NBT', '1.MD', '1.G', '1.MP'
+      pst_standards 'TK.CC', 'TK.OA', 'TK.MD', 'TK.G', 'TK.MP'
     end
 
-    pst_grid 1 do 
-      pst_title 'SCIENCE'
-      pst_standards '1.SCC'
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', ''
+      pst_comment 'TK.CMTS', 2.8
     end
-    
+
     pst_grade_scale 2 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
@@ -40,44 +40,39 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
     end
 
     pst_grid 2 do 
-      pst_title 'SOCIAL STUDIES'
-      pst_standards '1.SSC'
+      pst_title 'MOTOR SKILLS'
+      pst_standards 'TK.MS'
     end
     
     pst_grid 2 do
-      pst_title 'LEARNER / COMMUNICATOR'
-      pst_standards '1.SDL', '1.COL'
-    end
-    
-    pst_grid 2 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment '1.CMTS', 2.8
+      pst_title 'SOCIAL / EMOTIONAL DEVELOPMENT'
+      pst_standards 'TK.SE'
     end
   end
   
   pst_page 3 do
     pst_grid 1 do
       pst_title 'ART'
-      pst_standards '1.AR'
-      pst_comment '1.AR.5'
+      pst_standards 'K.AR'
+      pst_comment 'K.AR.5'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
-      pst_standards '1.LB'
-      pst_comment '1.LB.6'
+      pst_standards 'K.LB'
+      pst_comment 'K.LB.5'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
-      pst_standards '1.MU'
-      pst_comment '1.MU.5'
+      pst_standards 'K.MU'
+      pst_comment 'K.MU.5'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
-      pst_standards '1.PE'
-      pst_comment '1.PE.6'
+      pst_standards 'K.PE'
+      pst_comment 'K.PE.6'
     end
   end
   

@@ -1,4 +1,4 @@
-pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do 
+pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -9,75 +9,87 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
 
     pst_grid 1 do
       pst_title 'ENGLISH LANGUAGE ARTS - READING'
-      pst_standards '1.RF', '1.RL', '1.RI'
+      pst_standards '3.RF', '3.RL', '3.RI'
     end
   
     pst_attendance 2
     pst_supplemental 2
   
     pst_grid 2 do
-      pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
-      pst_standards '1.L', '1.W', '1.SL' 
+      pst_title 'LANGUAGE AND WRITING'
+      pst_standards '3.L', '3.W'
     end
   end
   
   pst_page 2 do
-    pst_grid 1 do 
-      pst_title 'MATHEMATICS'
-      pst_standards '1.OA', '1.NBT', '1.MD', '1.G', '1.MP'
-    end
-
-    pst_grid 1 do 
-      pst_title 'SCIENCE'
-      pst_standards '1.SCC'
+    pst_grid 1 do
+      pst_title 'SPEAKING AND LISTENING'
+      pst_standards '3.SL' 
     end
     
-    pst_grade_scale 2 do
+    pst_grid 1 do
+      pst_title 'MATHEMATICS'
+      pst_standards '3.OA', '3.MP'
+    end
+
+    pst_grid 2 do
+      pst_title 'MATHEMATICS'
+      pst_standards '3.NBT', '3.NF', '3.MD'
+    end
+  end
+  
+  pst_page 3 do
+    pst_grade_scale 1 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
         "<b>S</b> = <b>Seldom</b> demonstrates."
     end
 
-    pst_grid 2 do 
-      pst_title 'SOCIAL STUDIES'
-      pst_standards '1.SSC'
+    pst_grid 1 do
+      pst_title 'SCIENCE'
+      pst_standards '3.SCC'
     end
     
+    pst_grid 1 do 
+      pst_title 'SOCIAL STUDIES'
+      pst_standards '3.SSC'
+    end
+
     pst_grid 2 do
       pst_title 'LEARNER / COMMUNICATOR'
-      pst_standards '1.SDL', '1.COL'
+      pst_standards '3.SDL', '3.COL'
     end
-    
+
     pst_grid 2 do
       pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment '1.CMTS', 2.8
+      pst_comment '3.CMTS', 2.8
     end
   end
   
-  pst_page 3 do
+  pst_page 4 do
     pst_grid 1 do
       pst_title 'ART'
-      pst_standards '1.AR'
-      pst_comment '1.AR.5'
+      pst_standards '3.AR'
+      pst_comment '3.AR.5'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
-      pst_standards '1.LB'
-      pst_comment '1.LB.6'
+      pst_standards '3.LB'
+      pst_comment '3.LB.5'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
-      pst_standards '1.MU'
-      pst_comment '1.MU.5'
+      pst_standards '3.MU'
+      pst_comment '3.MU.5'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
-      pst_standards '1.PE'
-      pst_comment '1.PE.6'
+      pst_standards '3.PE'
+      pst_comment '3.PE.6'
     end
   end
   
