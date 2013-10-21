@@ -60,8 +60,18 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
     end 
     
     pst_grid 2 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment '4.CMTS', 2.8
+      pst_title 'HOMEROOM COMMENTS', 'T1'
+      pst_comment '4.CMTS|T1', 2.8
+    end
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', 'T2'
+      pst_comment '4.CMTS|T2', 2.8
+    end
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', 'T3'
+      pst_comment '4.CMTS|T3', 2.8
     end
   end
   

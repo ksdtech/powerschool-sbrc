@@ -9,44 +9,49 @@ pst_report 'sbrcgradetk.pst', 'CCSS Grade TK', 'Transitional Kindergarten Progre
 
     pst_grid 1 do
       pst_title 'ENGLISH LANGUAGE ARTS - READING'
-      pst_standards 'TK.RF', 'TK.RL'
+      pst_standards 'TK.RF', 'TK.RL', 'TK.L', 'TK.W', 'TK.SL' 
     end
   
     pst_attendance 2
     pst_supplemental 2
   
-    pst_grid 2 do
-      pst_title 'ENGLISH LANGUAGE ARTS'
-      pst_standards 'TK.L', 'TK.W', 'TK.SL' 
+    pst_grid 2 do 
+      pst_title 'MATHEMATICS'
+      pst_standards 'TK.CC', 'TK.OA', 'TK.MD', 'TK.G', 'TK.MP'
     end
   end
   
   pst_page 2 do
-    pst_grid 1 do 
-      pst_title 'MATHEMATICS'
-      pst_standards 'TK.CC', 'TK.OA', 'TK.MD', 'TK.G', 'TK.MP'
-    end
-
-    pst_grid 1 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment 'TK.CMTS', 2.8
-    end
-
-    pst_grade_scale 2 do
+    pst_grade_scale 1 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
         "<b>S</b> = <b>Seldom</b> demonstrates."
     end
 
-    pst_grid 2 do 
+    pst_grid 1 do 
       pst_title 'MOTOR SKILLS'
       pst_standards 'TK.MS'
     end
     
-    pst_grid 2 do
+    pst_grid 1 do
       pst_title 'SOCIAL / EMOTIONAL DEVELOPMENT'
       pst_standards 'TK.SE'
+    end
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', 'T1'
+      pst_comment 'TK.CMTS|T1', 2.8
+    end
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', 'T2'
+      pst_comment 'TK.CMTS|T2', 2.8
+    end
+    
+    pst_grid 2 do
+      pst_title 'HOMEROOM COMMENTS', 'T3'
+      pst_comment 'TK.CMTS|T3', 2.8
     end
   end
   

@@ -27,11 +27,6 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
       pst_standards '1.OA', '1.NBT', '1.MD', '1.G', '1.MP'
     end
 
-    pst_grid 1 do 
-      pst_title 'SCIENCE'
-      pst_standards '1.SCC|noheader'
-    end
-    
     pst_grade_scale 2 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
@@ -39,6 +34,11 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
         "<b>S</b> = <b>Seldom</b> demonstrates."
     end
 
+    pst_grid 2 do 
+      pst_title 'SCIENCE'
+      pst_standards '1.SCC|noheader'
+    end
+    
     pst_grid 2 do 
       pst_title 'SOCIAL STUDIES'
       pst_standards '1.SSC|noheader'
@@ -48,14 +48,26 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
       pst_title 'LEARNER / COMMUNICATOR'
       pst_standards '1.SDL', '1.COL'
     end
-    
-    pst_grid 2 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment '1.CMTS', 2.8
-    end
   end
   
   pst_page 3 do
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T1'
+      pst_comment '1.CMTS|T1', 2.8
+    end
+    
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T2'
+      pst_comment '1.CMTS|T2', 2.8
+    end
+    
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T3'
+      pst_comment '1.CMTS|T3', 2.8
+    end
+  end
+  
+  pst_page 4 do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '1.AR'

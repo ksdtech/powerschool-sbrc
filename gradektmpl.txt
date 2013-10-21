@@ -26,12 +26,7 @@ pst_report 'sbrcgradek.pst', 'CCSS Grade K', 'Kindergarten Progress Report'  do
       pst_title 'MATHEMATICS'
       pst_standards 'K.CC', 'K.OA', 'K.NBT', 'K.MD', 'K.G', 'K.MP'
     end
-    
-    pst_grid 1 do
-      pst_title 'HOMEROOM COMMENTS', ''
-      pst_comment 'K.CMTS', 2.8
-    end
-    
+        
     pst_grade_scale 2 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
@@ -46,6 +41,23 @@ pst_report 'sbrcgradek.pst', 'CCSS Grade K', 'Kindergarten Progress Report'  do
   end
   
   pst_page 3 do
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T1'
+      pst_comment 'K.CMTS|T1', 2.8
+    end
+    
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T2'
+      pst_comment 'K.CMTS|T2', 2.8
+    end
+    
+    pst_grid 1 do
+      pst_title 'HOMEROOM COMMENTS', 'T3'
+      pst_comment 'K.CMTS|T3', 2.8
+    end
+  end  
+  
+  pst_page 4 do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards 'K.AR'
