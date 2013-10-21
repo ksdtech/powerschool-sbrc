@@ -318,25 +318,25 @@ class Report
 
   def pst_supplemental(col_no)
     open_box(col_no)
-    t1c = round_num(@box[BOX_LEFT] + @caption_width + 0.5 * @grade_width)
+    t1l = round_num(@box[BOX_LEFT] + @caption_width + @text_bias[0])
     title('SUPPLEMENTAL PROGRAMS', '')
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_TOP], @box[BOX_RIGHT], @box[BOX_TOP])
-    s = 'English Language Learning - Overall CELDT'
+    s = 'English Language Learning - Language Proficiency Level'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "CELDT.Name")
-    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(tests;name=CELDT;score=Overall;type=num;result=max)", "CELDT.Overall", { bold: true })
+    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "ELProf.Name")
+    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(KSD_EL_Proficiency)", "ELProf.Score", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     s = 'Resource Specialist'
     maxh, h = line_height(s, false)
     @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "RSP.Name")
-    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(CA_PrimDisability;if.not.blank.then=X)", "504.Value", { bold: true })
+    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(CA_PrimDisability;if.not.blank.then=X)", "504.Value", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     s = '504'
     maxh, h = line_height(s, false)
     @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "504.Name")
-    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(CA_SpEd504;if.1.then=X)", "504.Value", { bold: true })
+    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(CA_SpEd504;if.1.then=X)", "504.Value", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     s = 'Modifications'
