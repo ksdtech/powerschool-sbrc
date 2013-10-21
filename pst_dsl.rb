@@ -8,20 +8,21 @@ def round_num(n)
 end
 
 class Box
-  def initialize(p, l, t, r, b, lbl="Box")
+  def initialize(p, l, t, r, b, lbl="Box", opts={})
     @p = p
     @l = l
     @t = t
     @r = r
     @b = b
     @lbl = lbl
+    @opts = opts
   end
   
   def build(xml, obj_no)
     xml.Type "Box"
     xml.Label sprintf(".%03d.#{@lbl}", obj_no)
     xml.Page @p
-    xml.Layer 0
+    xml.Layer @opts[:layer] ? @opts[:layer] : 0
     xml.Repeat {
       xml.Multiple 0
       xml.Offset {
@@ -43,6 +44,12 @@ class Box
       xml.Tint 100
     }
     xml.CornerRadius 0
+    if @opts[:fill]
+      xml.Fill {
+        xml.Color @opts[:fill]
+        xml.Tint 100
+      }
+    end
   end
 end
 
@@ -138,7 +145,7 @@ class Text
     xml.Type "Text"
     xml.Label sprintf(".%03d.#{@lbl}", obj_no)
     xml.Page @p
-    xml.Layer 0
+    xml.Layer @opts[:layer] ? @opts[:layer] : 0
     xml.Rotation 0
     xml.Coordinates {
       xml.Left round_num(@l)
@@ -365,22 +372,29 @@ class Report
   
   def pst_standards(*groups)
     @box_standards = groups
-    @box_standards.each do |parent|
-      box_top_line
+    @box_standards.each do |std_filter|
+      filters = std_filter.split('|')
+      parent = filters.shift
       std = @standards[parent]
       if !std
         raise "no such standard '#{parent}'"
       end
-      maxh, h = line_height(std[:name], true)
-      @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{parent}.Name", { bold: true })
-      @box[3] += h
-      @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
-      t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
-      t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
-      t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
       if !@standards_by_parent[parent] || @standards_by_parent[parent].empty?
         raise "no standards for parent '#{parent}'"
       end
+      
+      box_top_line
+      maxh, h = line_height(std[:name], true)
+      t1c = round_num(@box[0] + @caption_width + 0.5 * @grade_width)
+      t2c = round_num(@box[0] + @caption_width + 1.5 * @grade_width)
+      t3c = round_num(@box[0] + @caption_width + 2.5 * @grade_width)
+      
+      unless filters.include?('noheader')
+        @objects << Text.new(@page, @box[0] + @text_bias[0], @box[3] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{parent}.Name", { bold: true })
+        @box[3] += h
+        @objects << Line.new(@page, @box[0], @box[3], @box[2], @box[3])
+      end
+      
       @standards_by_parent[parent].each do |id|
         std = @standards[id]
         maxh, h = line_height(std[:name], false)

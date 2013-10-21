@@ -16,7 +16,7 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
     pst_supplemental 2
   
     pst_grid 2 do
-      pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
+      pst_title 'ENGLISH LANGUAGE ARTS'
       pst_standards '1.L', '1.W', '1.SL' 
     end
   end
@@ -29,7 +29,7 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
 
     pst_grid 1 do 
       pst_title 'SCIENCE'
-      pst_standards '1.SCC'
+      pst_standards '1.SCC|noheader'
     end
     
     pst_grade_scale 2 do
@@ -41,7 +41,7 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
 
     pst_grid 2 do 
       pst_title 'SOCIAL STUDIES'
-      pst_standards '1.SSC'
+      pst_standards '1.SSC|noheader'
     end
     
     pst_grid 2 do
@@ -59,25 +59,25 @@ pst_report 'sbrcgrade1.pst', 'CCSS Grade 1', 'First Grade Progress Report' do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '1.AR'
-      pst_comment '1.AR.5'
+      pst_comment '1.AR.05'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
       pst_standards '1.LB'
-      pst_comment '1.LB.6'
+      pst_comment '1.LB.06'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
       pst_standards '1.MU'
-      pst_comment '1.MU.5'
+      pst_comment '1.MU.05'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
       pst_standards '1.PE'
-      pst_comment '1.PE.6'
+      pst_comment '1.PE.06'
     end
   end
   

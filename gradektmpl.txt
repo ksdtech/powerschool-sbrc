@@ -16,7 +16,7 @@ pst_report 'sbrcgradek.pst', 'CCSS Grade K', 'Kindergarten Progress Report'  do
     pst_supplemental 2
   
     pst_grid 2 do
-      pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
+      pst_title 'ENGLISH LANGUAGE ARTS'
       pst_standards 'K.L', 'K.W', 'K.SL' 
     end
   end
@@ -49,25 +49,25 @@ pst_report 'sbrcgradek.pst', 'CCSS Grade K', 'Kindergarten Progress Report'  do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards 'K.AR'
-      pst_comment 'K.AR.5'
+      pst_comment 'K.AR.05'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
       pst_standards 'K.LB'
-      pst_comment 'K.LB.5'
+      pst_comment 'K.LB.05'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
       pst_standards 'K.MU'
-      pst_comment 'K.MU.5'
+      pst_comment 'K.MU.05'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
       pst_standards 'K.PE'
-      pst_comment 'K.PE.6'
+      pst_comment 'K.PE.06'
     end
   end
   

@@ -16,7 +16,7 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
     pst_supplemental 2
   
     pst_grid 2 do
-      pst_title 'ENGLISH LANGUAGE ARTS - OTHER'
+      pst_title 'ENGLISH LANGUAGE ARTS'
       pst_standards '4.L', '4.W', '4.SL' 
     end
   end
@@ -36,12 +36,12 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
 
     pst_grid 2 do 
       pst_title 'SCIENCE'
-      pst_standards '4.SCC'
+      pst_standards '4.SCC|noheader'
     end
     
     pst_grid 2 do 
       pst_title 'SOCIAL STUDIES'
-      pst_standards '4.SSC'
+      pst_standards '4.SSC|noheader'
     end
     
   end
@@ -69,25 +69,25 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '4.AR'
-      pst_comment '4.AR.5'
+      pst_comment '4.AR.05'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
       pst_standards '4.LB'
-      pst_comment '4.LB.6'
+      pst_comment '4.LB.06'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
       pst_standards '4.MU'
-      pst_comment '4.MU.5'
+      pst_comment '4.MU.05'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
       pst_standards '4.PE'
-      pst_comment '4.PE.6'
+      pst_comment '4.PE.06'
     end
   end
   

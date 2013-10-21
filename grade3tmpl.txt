@@ -48,12 +48,12 @@ pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do
 
     pst_grid 1 do
       pst_title 'SCIENCE'
-      pst_standards '3.SCC'
+      pst_standards '3.SCC|noheader'
     end
     
     pst_grid 1 do 
       pst_title 'SOCIAL STUDIES'
-      pst_standards '3.SSC'
+      pst_standards '3.SSC|noheader'
     end
 
     pst_grid 2 do
@@ -71,25 +71,25 @@ pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '3.AR'
-      pst_comment '3.AR.5'
+      pst_comment '3.AR.05'
     end
     
     pst_grid 1 do
       pst_title 'LIBRARY'
       pst_standards '3.LB'
-      pst_comment '3.LB.5'
+      pst_comment '3.LB.05'
     end
     
     pst_grid 2 do
       pst_title 'MUSIC'
       pst_standards '3.MU'
-      pst_comment '3.MU.5'
+      pst_comment '3.MU.05'
     end
     
     pst_grid 2 do
       pst_title 'PHYSICAL EDUCATION'
       pst_standards '3.PE'
-      pst_comment '3.PE.6'
+      pst_comment '3.PE.06'
     end
   end
   
