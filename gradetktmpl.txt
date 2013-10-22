@@ -1,4 +1,4 @@
-pst_report 'sbrcgradetk.pst', 'CCSS Grade TK', 'Transitional Kindergarten Progress Report'  do 
+pst_report 'sbrcgradetk.pst', 'Grade TK CCSS Report', 'Transitional Kindergarten Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -17,7 +17,7 @@ pst_report 'sbrcgradetk.pst', 'CCSS Grade TK', 'Transitional Kindergarten Progre
   
     pst_grid 2 do 
       pst_title 'MATHEMATICS'
-      pst_standards 'TK.CC', 'TK.OA', 'TK.MD', 'TK.G', 'TK.MP'
+      pst_standards 'TK.CC', 'TK.OA', 'TK.MD', 'TK.G'
     end
   end
   
@@ -28,15 +28,20 @@ pst_report 'sbrcgradetk.pst', 'CCSS Grade TK', 'Transitional Kindergarten Progre
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
         "<b>S</b> = <b>Seldom</b> demonstrates."
     end
+    
+    pst_grid 1 do 
+      pst_title 'MATHEMATICAL PRACTICE'
+      pst_standards 'TK.MP|noheader'
+    end
 
     pst_grid 1 do 
       pst_title 'MOTOR SKILLS'
-      pst_standards 'TK.MS'
+      pst_standards 'TK.MS|noheader'
     end
     
     pst_grid 1 do
       pst_title 'SOCIAL / EMOTIONAL DEVELOPMENT'
-      pst_standards 'TK.SE'
+      pst_standards 'TK.SE|noheader'
     end
     
     pst_grid 2 do

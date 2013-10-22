@@ -1,4 +1,4 @@
-pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do 
+pst_report 'sbrcgrade3.pst', 'Grade 3 CCSS Report', 'Third Grade Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -29,7 +29,7 @@ pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do
     
     pst_grid 1 do
       pst_title 'MATHEMATICS'
-      pst_standards '3.OA', '3.MP'
+      pst_standards '3.OA'
     end
 
     pst_grid 2 do
@@ -44,6 +44,11 @@ pst_report 'sbrcgrade3.pst', 'CCSS Grade 3', 'Third Grade Progress Report'  do
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
         "<b>S</b> = <b>Seldom</b> demonstrates."
+    end
+
+    pst_grid 1 do 
+      pst_title 'MATHEMATICAL PRACTICE'
+      pst_standards '3.MP|noheader'
     end
 
     pst_grid 1 do

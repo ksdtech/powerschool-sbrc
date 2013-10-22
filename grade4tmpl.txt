@@ -1,4 +1,4 @@
-pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do 
+pst_report 'sbrcgrade4.pst', 'Grade 4 CCSS Report', 'Fourth Grade Progress Report'  do 
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -24,7 +24,7 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
   pst_page 2 do
     pst_grid 1 do 
       pst_title 'MATHEMATICS'
-      pst_standards '4.OA', '4.NBT', '4.MD', '4.G', '4.NF', '4.MP'
+      pst_standards '4.OA', '4.NBT', '4.NF', '4.MD', '4.G'
     end
 
     pst_grade_scale 2 do
@@ -32,6 +32,11 @@ pst_report 'sbrcgrade4.pst', 'CCSS Grade 4', 'Fourth Grade Progress Report'  do
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
         "<b>S</b> = <b>Seldom</b> demonstrates."
+    end
+
+    pst_grid 2 do 
+      pst_title 'MATHEMATICAL PRACTICE'
+      pst_standards '4.MP|noheader'
     end
 
     pst_grid 2 do 
