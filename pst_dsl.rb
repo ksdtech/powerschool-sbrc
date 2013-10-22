@@ -191,7 +191,6 @@ class Report
   BOX_TOP = 1
   BOX_RIGHT = 2
   BOX_BOTTOM = 3
-  BOX_TRIMESTERS = 4
   
   def initialize(filename, ps_name, title)
     @filename = filename
@@ -202,6 +201,7 @@ class Report
     @page = 1
     @column = 1
     @box = nil
+    @box_trimesters = true
     @box_first = true
     @box_standards = nil
     @comment_std = nil
@@ -217,6 +217,8 @@ class Report
     @grade_width = 0.25
     @caption_width = @column_width - (3 * @grade_width)
     @caption_maxw  = @caption_width - @text_bias[0]
+    @supp_caption_width = @column_width - 1.5
+    @supp_caption_maxw = @supp_caption_width - @text_bias[0]
     @standards = { }
     @standards_by_course = { }
     @standards_by_parent = { }
@@ -318,13 +320,14 @@ class Report
 
   def pst_supplemental(col_no)
     open_box(col_no)
-    t1l = round_num(@box[BOX_LEFT] + @caption_width + @text_bias[0])
     title('SUPPLEMENTAL PROGRAMS', '')
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_TOP], @box[BOX_RIGHT], @box[BOX_TOP])
+    t1l = @box[BOX_LEFT] + @supp_caption_width + @text_bias[0]
     s = 'English Language Learning - Language Proficiency Level'
-    maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "ELProf.Name")
-    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(KSD_EL_Proficiency)", "ELProf.Score", { bold: true })
+    maxh = h = @p_height + @br_height
+    maxw = @column_width - @supp_caption_width - @text_bias[0]
+    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @supp_caption_maxw, maxh, s, "ELProf.Name")
+    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], maxw, maxh, "^(KSD_EL_Proficiency)", "ELProf.Score", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     s = 'Resource Specialist'
@@ -344,6 +347,8 @@ class Report
     @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "Modifications.Name")
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
+    @objects << Line.new(@page, @box[BOX_LEFT] + @supp_caption_width, @box[BOX_TOP], @box[BOX_LEFT] + @supp_caption_width, @box[BOX_BOTTOM])
+    @box_trimesters = false
     close_box
   end
   
@@ -386,6 +391,7 @@ class Report
   def pst_grade_scale(col_no)
     open_box(col_no)
     @grade_scale = true
+    @box_trimesters = false
     yield self
     close_box
   end
@@ -469,7 +475,8 @@ class Report
   def open_box(col_no)
     @column = col_no
     i = @column - 1
-    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[i] + @column_width, @col_tops[i], true ]
+    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[i] + @column_width, @col_tops[i] ]
+    @box_trimesters = true
     @box_first = true
     @box_standards = nil
     @comment_std = nil
@@ -498,13 +505,13 @@ class Report
       t1c = round_num(@box[BOX_LEFT] + @caption_width + 0.5 * @grade_width)
       if n < 2
         # use trimester labels
-        @box[BOX_TRIMESTERS] = true
+        @box_trimesters = true
         t2c = round_num(@box[BOX_LEFT] + @caption_width + 1.5 * @grade_width)
         t3c = round_num(@box[BOX_LEFT] + @caption_width + 2.5 * @grade_width)
         @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>T1<tabc #{t2c}>T2<tabc #{t3c}>T3", "Grid.T123", { bold: true })
       else
         # use value label
-        @box[BOX_TRIMESTERS] = false
+        @box_trimesters = false
         value = cols[1].strip
         if value != ""
           t3r = @box[BOX_RIGHT] - @text_bias[0]
@@ -517,10 +524,8 @@ class Report
   end
 
   def close_box
-    if ((@box[BOX_BOTTOM] - @box[BOX_TOP]).abs > 0.01)
-      # vertical lines for T1, T2, T3
-      n = @box[BOX_TRIMESTERS] ? 3 : 1
-      1.upto(n) do |i|
+    if @box_trimesters && ((@box[BOX_BOTTOM] - @box[BOX_TOP]).abs > 0.01)
+      1.upto(3) do |i|
         left = @box[BOX_RIGHT] - (4-i) * @grade_width
         @objects << Line.new(@page, left, @box[BOX_TOP], left, @box[BOX_BOTTOM])
       end
