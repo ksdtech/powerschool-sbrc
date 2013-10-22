@@ -544,7 +544,7 @@ class Report
       text = @box_standards ? "<b>COMMENTS</b>\n" : ""
       case terms.size
       when 0
-        text += "<b>T1:</b> ^(*std.stored.comment;#{std};T1)\n<b>T2:</b> ^(*std.stored.comment;#{std};T2)\n<b>T3:</b> ^(*std.stored.comment;#{std};T3)"
+        text += "^(*std.stored.comment;#{std};T1)\n^(*std.stored.comment;#{std};T2)\n^(*std.stored.comment;#{std};T3)"
       when 1
         text += "^(*std.stored.comment;#{std};#{terms[0]})"
       else
