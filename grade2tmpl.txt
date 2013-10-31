@@ -1,4 +1,5 @@
-pst_report 'sbrcgrade2.pst', 'Grade 2 CCSS Report', 'Second Grade Progress Report'  do 
+pst_report 'sbrcgrade2', 'Bacich Grade 2 CCSS Report', 'Second Grade Progress Report'  do 
+pst_terms do
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -99,4 +100,5 @@ pst_report 'sbrcgrade2.pst', 'Grade 2 CCSS Report', 'Second Grade Progress Repor
   end
   
   pst_output
+end
 end

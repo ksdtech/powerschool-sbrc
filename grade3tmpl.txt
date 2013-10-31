@@ -1,4 +1,5 @@
-pst_report 'sbrcgrade3.pst', 'Grade 3 CCSS Report', 'Third Grade Progress Report'  do 
+pst_report 'sbrcgrade3', 'Bacich Grade 3 CCSS Report', 'Third Grade Progress Report'  do 
+pst_terms do
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
@@ -109,4 +110,5 @@ pst_report 'sbrcgrade3.pst', 'Grade 3 CCSS Report', 'Third Grade Progress Report
   end
   
   pst_output
+end
 end

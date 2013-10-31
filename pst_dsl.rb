@@ -191,21 +191,14 @@ class Report
   BOX_TOP = 1
   BOX_RIGHT = 2
   BOX_BOTTOM = 3
+  TERMS = ['T1', 'T2', 'T3']
+  FULL_TERMS = ['1st Trimester', '2nd Trimester', '3rd Trimester']
   
   def initialize(filename, ps_name, title)
     @filename = filename
     @ps_name = ps_name
     @title = title
-    @objects = [ ]
     @page_tops = [ 2.2, 0.6 ]
-    @page = 1
-    @column = 1
-    @box = nil
-    @box_trimesters = true
-    @box_first = true
-    @box_standards = nil
-    @comment_std = nil
-    @grade_scale = false
     @comment_height = 1.8
     @caption_char_widths = [ [ 48, 92-48 ], [ 40, 80-40 ] ]
     @p_height   = 0.2
@@ -222,7 +215,30 @@ class Report
     @standards = { }
     @standards_by_course = { }
     @standards_by_parent = { }
+    @term = 2
     read_standards
+    reset
+  end
+  
+  def reset
+    @page = 1
+    @column = 1
+    @box = nil
+    @box_trimesters = true
+    @box_first = true
+    @box_standards = nil
+    @comment_std = nil
+    @grade_scale = false
+    @objects = [ ]
+  end
+  
+  def pst_terms
+    @term = 0
+    while @term < 3
+      yield self
+      @term += 1
+      reset
+    end
   end
   
   def pst_output
@@ -236,7 +252,7 @@ class Report
         }
         xml.ReportHeader {
           xml.Type "Object Report"
-          xml.Name @ps_name
+          xml.Name report_name
           xml.Table "Students"
         }
         xml.ReportData {
@@ -276,7 +292,7 @@ class Report
 
     # Don't write whole document. PowerSchool chokes on
     # <xml> declaration
-    File.open(@filename, "w") do |f|
+    File.open(output_filename, "w") do |f|
       builder.doc.root.write_to(f)
     end
   end
@@ -306,13 +322,21 @@ class Report
     t1c = round_num(@box[BOX_LEFT] + @caption_width + 0.5 * @grade_width)
     t2c = round_num(@box[BOX_LEFT] + @caption_width + 1.5 * @grade_width)
     t3c = round_num(@box[BOX_LEFT] + @caption_width + 2.5 * @grade_width)
-    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(daily.att.count;;A,E,X,S;T1)<tabc #{t2c}>^(daily.att.count;;A,E,X,S;T2)<tabc #{t3c}>^(daily.att.count;;A,E,X,S;T3)", "Absent.T123", { bold: true })
+    v = [ 
+      "<tabc #{t1c}>^(daily.att.count;;A,E,X,P,S;T1)",
+      "<tabc #{t2c}>^(daily.att.count;;A,E,X,P,S;T2)",
+      "<tabc #{t3c}>^(daily.att.count;;A,E,X,P,S;T3)" ].take(@term+1).join("")
+    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, v, "Absent.T123", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     s = 'Days tardy'
     maxh, h = line_height(s, false)
     @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "Tardy.Name")
-    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(daily.att.count;;T,U,L;T1)<tabc #{t2c}>^(daily.att.count;;T,U,L;T2)<tabc #{t3c}>^(daily.att.count;;T,U,L;T3)", "Tardy.T123", { bold: true })
+    v = [ 
+      "<tabc #{t1c}>^(daily.att.count;;T,U,L;T1)",
+      "<tabc #{t2c}>^(daily.att.count;;T,U,L;T2)",
+      "<tabc #{t3c}>^(daily.att.count;;T,U,L;T3)" ].take(@term+1).join("")
+    @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, v, "Tardy.T123", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     close_box
@@ -342,9 +366,10 @@ class Report
     @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(CA_SpEd504;if.1.then=X)", "504.Value", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
-    s = 'Modifications'
+    s = 'Speech'
     maxh, h = line_height(s, false)
-    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "Modifications.Name")
+    @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "Speech.Name")
+    @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(KSD_Speech;if.1.then=X)", "Speech.Value", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
     @objects << Line.new(@page, @box[BOX_LEFT] + @supp_caption_width, @box[BOX_TOP], @box[BOX_LEFT] + @supp_caption_width, @box[BOX_BOTTOM])
@@ -380,8 +405,12 @@ class Report
       @standards_by_parent[parent].each do |id|
         std = @standards[id]
         maxh, h = line_height(std[:name], false)
-        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{id}.Name")
-        @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "<tabc #{t1c}>^(*std.stored.transhigh;#{id};T1)<tabc #{t2c}>^(*std.stored.transhigh;#{id};T2)<tabc #{t3c}>^(*std.stored.transhigh;#{id};T3)", "#{id}.T123", { bold: true })
+        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{id}.Name")        
+        v =  [
+          "<tabc #{t1c}>^(decode;^(*std.stored.transhigh;#{id};T1);1;1;2;2;3;3;C;C;O;O;S;S;-)", 
+          "<tabc #{t2c}>^(decode;^(*std.stored.transhigh;#{id};T2);1;1;2;2;3;3;C;C;O;O;S;S;-)",
+          "<tabc #{t3c}>^(decode;^(*std.stored.transhigh;#{id};T3);1;1;2;2;3;3;C;C;O;O;S;S;-)" ].take(@term+1).join("")
+        @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, v, "#{id}.T123", { bold: true })
         @box[BOX_BOTTOM] += h
         @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
       end
@@ -415,6 +444,18 @@ class Report
   end
     
   protected
+  
+  def report_name
+    "#{@ps_name} #{TERMS[@term]}"
+  end
+  
+  def term_title
+    "#{@title} - #{FULL_TERMS[@term]}"
+  end
+  
+  def output_filename
+    "#{@filename}-#{TERMS[@term]}.pst"
+  end
     
   def line_count(s, bold)
     widths_table = @caption_char_widths[bold ? 1 : 0]
@@ -460,11 +501,11 @@ class Report
     @page = page_no
     if @page == 1
       @objects << Picture.new(@page,  0.556,  0.500,  1.612,  2.000, "KSDLogo.jpg", "Picture")
-      @objects << Text.new(@page,  1.600,  0.778,  0,  0, "<tabc 4.25>Kentfield School District", "Kentfield School District", {  })
-      @objects << Text.new(@page,  1.600,  0.944,  0,  0, "<tabc 4.25>" + @title, @title, { size: 11, bold: true,  })
-      @objects << Text.new(@page,  1.600,  1.111,  0,  0, "<tabc 4.25>Bacich Elementary School - Sally Peck, Principal", "Bacich", {  })
-      @objects << Text.new(@page,  1.600,  1.278,  0,  0, "<tabc 4.25>School Year 2013-2014", "School Year", {  })
-      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)", "Student Name", { size: 9, bold: true })
+      @objects << Text.new(@page,  1.600,  0.778,  0,  0, "<tabc 4.25>Kentfield School District", "Kentfield School District")
+      @objects << Text.new(@page,  1.600,  0.944,  0,  0, "<tabc 4.25>" + term_title, @title, { size: 11, bold: true })
+      @objects << Text.new(@page,  1.600,  1.111,  0,  0, "<tabc 4.25>Bacich Elementary School - Sally Peck, Principal", "Bacich")
+      @objects << Text.new(@page,  1.600,  1.278,  0,  0, "<tabc 4.25>School Year 2013-2014", "School Year")
+      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)\n[^(Student_Number)-1314-#{TERMS[@term]}]", "Student Name", { size: 9, bold: true })
       @col_tops = [ @page_tops[0], @page_tops[0] ]
     else
       @col_tops = [ @page_tops[1], @page_tops[1] ]
