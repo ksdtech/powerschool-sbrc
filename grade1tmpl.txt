@@ -6,7 +6,7 @@ pst_report 'sbrcgrade1', 'Bacich Grade 1 CCSS Report', 'First Grade Progress Rep
         pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard.", 
           "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard.", 
           "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard.",
-          "<b>-</b> = Standard not taught this reporting period."
+          "<b>BLANK</b> = Standard not taught this reporting period."
       end
 
       pst_grid 1 do
@@ -34,7 +34,7 @@ pst_report 'sbrcgrade1', 'Bacich Grade 1 CCSS Report', 'First Grade Progress Rep
         pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
           "<b>O</b> = <b>Occasionally</b> demonstrates.", 
           "<b>S</b> = <b>Seldom</b> demonstrates.",
-          "<b>-</b> = Standard not taught this reporting period."
+          "<b>BLANK</b> = Standard not taught this reporting period."
       end
 
       pst_grid 2 do 
