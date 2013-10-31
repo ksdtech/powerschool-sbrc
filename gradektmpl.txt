@@ -5,7 +5,8 @@ pst_terms do
       pst_title "Academic Achievement Level Descriptors"
       pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard.", 
         "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard.", 
-        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard."
+        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard.",
+        "<b>-</b> = Standard not taught this reporting period."
     end
 
     pst_grid 1 do
@@ -32,7 +33,8 @@ pst_terms do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
-        "<b>S</b> = <b>Seldom</b> demonstrates."
+        "<b>S</b> = <b>Seldom</b> demonstrates.",
+        "<b>-</b> = Standard not taught this reporting period."
     end
 
     pst_grid 2 do 
