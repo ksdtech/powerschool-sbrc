@@ -2,6 +2,8 @@ require 'csv'
 require 'nokogiri'
 
 $the_report = nil
+YEAR = '1314'
+DEFAULT_TERM = 'T1'
 
 def round_num(n)
   sprintf("%.03f", n).gsub(/\.000$/, '')
@@ -185,21 +187,21 @@ class Text
 end
 
 class Report
-  attr_accessor :box
+  attr_accessor :box, :terms
   
   BOX_LEFT = 0
   BOX_TOP = 1
   BOX_RIGHT = 2
   BOX_BOTTOM = 3
-  TERMS = ['T1', 'T2', 'T3']
+  TERMS = ['T1', 'T2', 'T3', DEFAULT_TERM ]
   FULL_TERMS = ['1st Trimester', '2nd Trimester', '3rd Trimester']
   
-  def initialize(filename, ps_name, title)
+  def initialize(filename, ps_name, title, use_terms, version)
     @filename = filename
     @ps_name = ps_name
     @title = title
+    @default_comment_height = 1.8
     @page_tops = [ 2.2, 0.6 ]
-    @comment_height = 1.8
     @caption_char_widths = [ [ 48, 92-48 ], [ 40, 80-40 ] ]
     @p_height   = 0.2
     @br_height  = 0.17
@@ -215,7 +217,9 @@ class Report
     @standards = { }
     @standards_by_course = { }
     @standards_by_parent = { }
-    @term = 2
+    @terms = use_terms ? [0, 1, 2] : [3]
+    @version = version
+    @term = 0
     read_standards
     reset
   end
@@ -228,17 +232,10 @@ class Report
     @box_first = true
     @box_standards = nil
     @comment_std = nil
+    @comment_height = @default_comment_height
+    @colspan = 1
     @grade_scale = false
     @objects = [ ]
-  end
-  
-  def pst_terms
-    @term = 0
-    while @term < 3
-      yield self
-      @term += 1
-      reset
-    end
   end
   
   def pst_output
@@ -247,7 +244,7 @@ class Report
         xml.FileHeader {
           xml.Created "Friday, October 4, 2013 9:20:54 AM"
           xml.PSVersion "(VisualPST 2.1)"
-          xml.TemplateVersion "1.0"
+          xml.TemplateVersion @version
           xml.Author "Peter Zingg"
         }
         xml.ReportHeader {
@@ -302,8 +299,8 @@ class Report
     yield self
   end
 
-  def pst_grid(col_no)
-    open_box(col_no)
+  def pst_grid(col_no, cols=1)
+    open_box(col_no, cols)
     yield self
     close_box
   end
@@ -354,7 +351,7 @@ class Report
     @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], maxw, maxh, "^(KSD_EL_Proficiency)", "ELProf.Score", { bold: true })
     @box[BOX_BOTTOM] += h
     @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
-    s = 'Resource Specialist'
+    s = 'Learning Center (RSP)'
     maxh, h = line_height(s, false)
     @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, s, "RSP.Name")
     @objects << Text.new(@page, t1l, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, "^(CA_PrimDisability;if.not.blank.then=X)", "504.Value", { bold: true })
@@ -407,9 +404,9 @@ class Report
         maxh, h = line_height(std[:name], false)
         @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{id}.Name")        
         v =  [
-          "<tabc #{t1c}>^(decode;^(*std.stored.transhigh;#{id};T1);1;1;2;2;3;3;C;C;O;O;S;S;-)", 
-          "<tabc #{t2c}>^(decode;^(*std.stored.transhigh;#{id};T2);1;1;2;2;3;3;C;C;O;O;S;S;-)",
-          "<tabc #{t3c}>^(decode;^(*std.stored.transhigh;#{id};T3);1;1;2;2;3;3;C;C;O;O;S;S;-)" ].take(@term+1).join("")
+          "<tabc #{t1c}>^(*std.stored.transhigh;#{id};T1)", 
+          "<tabc #{t2c}>^(*std.stored.transhigh;#{id};T2)",
+          "<tabc #{t3c}>^(*std.stored.transhigh;#{id};T3)" ].take(@term+1).join("")
         @objects << Text.new(@page, @box[BOX_LEFT] + @caption_width, @box[BOX_BOTTOM] + @text_bias[1], 0, 0, v, "#{id}.T123", { bold: true })
         @box[BOX_BOTTOM] += h
         @objects << Line.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM])
@@ -438,23 +435,29 @@ class Report
     @box[BOX_TOP] = @box[BOX_BOTTOM]
   end
   
-  def pst_comment(comments, height=1.8)
+  def pst_comment(comments, height=0)
     @comment_std = comments
-    @comment_height = height
+    @comment_height = height > 0 ? height : @default_comment_height
+  end
+  
+  def run_term(t)
+    reset
+    @term = t
+    return self
   end
     
   protected
   
   def report_name
-    "#{@ps_name} #{TERMS[@term]}"
+    @term > 2 ? @ps_name : "#{@ps_name} #{TERMS[@term]}"
   end
   
   def term_title
-    "#{@title} - #{FULL_TERMS[@term]}"
+    @term > 2 ? @title : "#{@title} - #{FULL_TERMS[@term]}"
   end
   
   def output_filename
-    "#{@filename}-#{TERMS[@term]}.pst"
+    @term > 2 ? "#{@filename}.pst" : "#{@filename}-#{TERMS[@term]}.pst"
   end
     
   def line_count(s, bold)
@@ -496,7 +499,12 @@ class Report
       @standards_by_parent[parent].sort! { |a,b| @standards[a][:sortorder] <=> @standards[b][:sortorder] }
     end
   end
-    
+  
+  def year_and_term
+    # works with @term == 3
+    return "#{YEAR}-#{TERMS[@term]}"
+  end
+  
   def page(page_no)
     @page = page_no
     if @page == 1
@@ -505,7 +513,7 @@ class Report
       @objects << Text.new(@page,  1.600,  0.944,  0,  0, "<tabc 4.25>" + term_title, @title, { size: 11, bold: true })
       @objects << Text.new(@page,  1.600,  1.111,  0,  0, "<tabc 4.25>Bacich Elementary School - Sally Peck, Principal", "Bacich")
       @objects << Text.new(@page,  1.600,  1.278,  0,  0, "<tabc 4.25>School Year 2013-2014", "School Year")
-      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)\n[^(Student_Number)-1314-#{TERMS[@term]}]", "Student Name", { size: 9, bold: true })
+      @objects << Text.new(@page,  1.600,  1.500,  0,  0, "Student Name: ^(First_Name) ^(Middle_Name) ^(Last_Name)\nTeacher: ^(HomeRoom_TeacherFirst) ^(HomeRoom_Teacher)\n[^(Student_Number)-#{year_and_term}]", "Student Name", { size: 9, bold: true })
       @col_tops = [ @page_tops[0], @page_tops[0] ]
     else
       @col_tops = [ @page_tops[1], @page_tops[1] ]
@@ -513,14 +521,17 @@ class Report
     open_box(1)
   end
   
-  def open_box(col_no)
+  def open_box(col_no, cols=1)
     @column = col_no
+    @colspan = cols
     i = @column - 1
-    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[i] + @column_width, @col_tops[i] ]
+    j = @column + @colspan - 2
+    @box = [ @col_lefts[i], @col_tops[i], @col_lefts[j] + @column_width, @col_tops[i] ]
     @box_trimesters = true
     @box_first = true
     @box_standards = nil
     @comment_std = nil
+    @comment_height = @default_comment_height
   end
   
   def box_top_line
@@ -579,9 +590,10 @@ class Report
       
       box_top_line
       left = @box[BOX_LEFT] + @text_bias[0]
-      top = @box[BOX_BOTTOM] + @text_bias[1]
-      maxw = @column_width - 2 * @text_bias[0]
+      top  = @box[BOX_BOTTOM] + @text_bias[1]
+      maxw = @box[BOX_RIGHT] - @box[BOX_LEFT] - 2 * @text_bias[0]
       maxh = @comment_height - 2 * @text_bias[1]
+      raise "maxh less than zero" if maxh <= 0
       text = @box_standards ? "<b>COMMENTS</b>\n" : ""
       case terms.size
       when 0
@@ -609,13 +621,17 @@ class Report
     @box_first = true
     @box_standards = nil
     @comment_std = nil
+    @comment_height = @default_comment_height
+    @colspan = 1
     @grade_scale = false
   end
 end
 
 def pst_report(filename, ps_name, title)
-  $the_report = Report.new(filename, ps_name, title)
-  yield $the_report
+  $the_report = Report.new(filename, ps_name, title, USING_TERMS, REPORT_VERSION)
+  $the_report.terms.each do |t|
+    yield $the_report.run_term(t)
+  end
 end
 
 def method_missing(meth, *args, &block)

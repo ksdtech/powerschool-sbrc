@@ -1,5 +1,8 @@
 require './pst_dsl'
 
+USING_TERMS = FALSE
+REPORT_VERSION = "1.2"
+
 TEMPLATES = [
   'gradetktmpl.txt', 'gradektmpl.txt', 
   'grade1tmpl.txt', 'grade2tmpl.txt',

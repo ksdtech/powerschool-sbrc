@@ -1,12 +1,12 @@
 pst_report 'sbrcgrade4', 'Bacich Grade 4 CCSS Report', 'Fourth Grade Progress Report'  do 
-pst_terms do
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
-      pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard.", 
-        "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard.", 
-        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard.",
-        "<b>BLANK</b> = Standard not taught this reporting period."
+      pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard", 
+        "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard", 
+        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard",
+        "<b>M</b> = With modifications",
+        "<b>BLANK</b> = Standard not taught this reporting period"
     end
 
     pst_grid 1 do
@@ -66,24 +66,26 @@ pst_terms do
       pst_title 'LEARNER / COMMUNICATOR'
       pst_standards '4.SDL', '4.COL'
     end 
-    
-    pst_grid 2 do
+  end
+  
+  pst_page 4 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T1'
       pst_comment '4.CMTS|T1', 2.8
     end
     
-    pst_grid 2 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T2'
       pst_comment '4.CMTS|T2', 2.8
     end
     
-    pst_grid 2 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T3'
       pst_comment '4.CMTS|T3', 2.8
     end
   end
   
-  pst_page 4 do
+  pst_page 5 do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '4.AR'
@@ -110,5 +112,4 @@ pst_terms do
   end
   
   pst_output
-end
 end

@@ -1,12 +1,12 @@
 pst_report 'sbrcgradek', 'Bacich Grade K CCSS Report', 'Kindergarten Progress Report'  do 
-pst_terms do
   pst_page 1 do
     pst_grade_scale 1 do
       pst_title "Academic Achievement Level Descriptors"
-      pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard.", 
-        "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard.", 
-        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard.",
-        "<b>BLANK</b> = Standard not taught this reporting period."
+      pst_text "<b>3</b> = <b>Significant</b> understanding of and ability to apply standard", 
+        "<b>2</b> = <b>Partial</b> understanding of and ability to apply standard", 
+        "<b>1</b> = <b>Minimal</b> understanding of and ability to apply standard",
+        "<b>M</b> = With modifications",
+        "<b>BLANK</b> = Standard not taught this reporting period"
     end
 
     pst_grid 1 do
@@ -49,17 +49,17 @@ pst_terms do
   end
   
   pst_page 3 do
-    pst_grid 1 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T1'
       pst_comment 'K.CMTS|T1', 2.8
     end
     
-    pst_grid 1 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T2'
       pst_comment 'K.CMTS|T2', 2.8
     end
     
-    pst_grid 1 do
+    pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T3'
       pst_comment 'K.CMTS|T3', 2.8
     end
@@ -92,5 +92,4 @@ pst_terms do
   end
   
   pst_output
-end
 end

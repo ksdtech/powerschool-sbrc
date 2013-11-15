@@ -29,3 +29,8 @@ Listparent
 4. Run build_pst.rb.
 
 5. Import .pst file into PowerSchool.
+
+In PowerSchool, reports are in the Reports table.
+Report objects are in the RObj table.
+
+2721 - 2726
