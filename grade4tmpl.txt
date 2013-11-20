@@ -29,7 +29,7 @@ pst_report 'sbrcgrade4', 'Bacich Grade 4 CCSS Report', 'Fourth Grade Progress Re
       pst_standards '4.OA', '4.NBT', '4.NF', '4.MD', '4.G'
     end
 
-    pst_grade_scale 2 do
+    pst_grade_scale 1 do
       pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
       pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
         "<b>O</b> = <b>Occasionally</b> demonstrates.", 
@@ -37,7 +37,7 @@ pst_report 'sbrcgrade4', 'Bacich Grade 4 CCSS Report', 'Fourth Grade Progress Re
         "<b>BLANK</b> = Standard not taught this reporting period."
     end
 
-    pst_grid 2 do 
+    pst_grid 1 do 
       pst_title 'MATHEMATICAL PRACTICE'
       pst_standards '4.MP|noheader'
     end
@@ -52,23 +52,13 @@ pst_report 'sbrcgrade4', 'Bacich Grade 4 CCSS Report', 'Fourth Grade Progress Re
       pst_standards '4.SSC|noheader'
     end
     
-  end
-  
-  pst_page 3 do
-    pst_grade_scale 1 do
-      pst_title "Self-Directed Learner and", "Collaborative Communicator Descriptors"
-      pst_text "<b>C</b> = <b>Consistently</b> demonstrates.", 
-        "<b>O</b> = <b>Occasionally</b> demonstrates.", 
-        "<b>S</b> = <b>Seldom</b> demonstrates."
-    end
-    
-    pst_grid 1 do
+    pst_grid 2 do
       pst_title 'LEARNER / COMMUNICATOR'
       pst_standards '4.SDL', '4.COL'
     end 
   end
-  
-  pst_page 4 do
+    
+  pst_page 3 do
     pst_grid(1, 2) do
       pst_title 'HOMEROOM COMMENTS', 'T1'
       pst_comment '4.CMTS|T1', 2.8
@@ -85,7 +75,7 @@ pst_report 'sbrcgrade4', 'Bacich Grade 4 CCSS Report', 'Fourth Grade Progress Re
     end
   end
   
-  pst_page 5 do
+  pst_page 4 do
     pst_grid 1 do
       pst_title 'ART'
       pst_standards '4.AR'
