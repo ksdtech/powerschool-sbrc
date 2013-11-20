@@ -388,21 +388,21 @@ class Report
       end
       
       box_top_line
-      maxh, h = line_height(std[:name], true)
+      maxh, h = line_height(std[:description], true)
       t1c = round_num(@box[BOX_LEFT] + @caption_width + 0.5 * @grade_width)
       t2c = round_num(@box[BOX_LEFT] + @caption_width + 1.5 * @grade_width)
       t3c = round_num(@box[BOX_LEFT] + @caption_width + 2.5 * @grade_width)
       
       unless filters.include?('noheader')
-        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{parent}.Name", { layer: 2, bold: true })
+        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:description], "#{parent}.Name", { layer: 2, bold: true })
         @objects << Box.new(@page, @box[BOX_LEFT], @box[BOX_BOTTOM], @box[BOX_RIGHT], @box[BOX_BOTTOM]+h, "#{parent}.Box", { layer: 1, fill: "#CCCCCC" })
         @box[BOX_BOTTOM] += h
       end
       
       @standards_by_parent[parent].each do |id|
         std = @standards[id]
-        maxh, h = line_height(std[:name], false)
-        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:name], "#{id}.Name")        
+        maxh, h = line_height(std[:description], false)
+        @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:description], "#{id}.Name")        
         v =  [
           "<tabc #{t1c}>^(*std.stored.transhigh;#{id};T1)", 
           "<tabc #{t2c}>^(*std.stored.transhigh;#{id};T2)",
