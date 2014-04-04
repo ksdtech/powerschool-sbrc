@@ -383,8 +383,12 @@ class Report
       if !std
         raise "no such standard '#{parent}'"
       end
-      if !@standards_by_parent[parent] || @standards_by_parent[parent].empty?
+      if !@standards_by_parent[parent]
         raise "no standards for parent '#{parent}'"
+      end
+      this_section = @standards_by_parent[parent].keep_if { |s| @standards[s][:courses] }
+      if this_section.empty?
+        raise "no course-aligned standards for parent '#{parent}'"
       end
       
       box_top_line
@@ -399,7 +403,7 @@ class Report
         @box[BOX_BOTTOM] += h
       end
       
-      @standards_by_parent[parent].each do |id|
+      this_section.each do |id|
         std = @standards[id]
         maxh, h = line_height(std[:description], false)
         @objects << Text.new(@page, @box[BOX_LEFT] + @text_bias[0], @box[BOX_BOTTOM] + @text_bias[1], @caption_maxw, maxh, std[:description], "#{id}.Name")        
@@ -482,6 +486,7 @@ class Report
       h  = row.to_hash
       id = h[:identifier]
       @standards[id] = h
+      
       courses = h[:courses]
       if courses
         courses.split(',').each do |course|
